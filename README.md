@@ -59,3 +59,80 @@ Com o entendimento do negócio definido, o próximo passo é estruturar um **cro
 
 Essa fase garante que todas as partes envolvidas estejam **alinhadas sobre os objetivos do projeto**, as expectativas e os desafios a serem enfrentados. **Com um bom entendimento do negócio, evitamos desperdício de tempo e garantimos que o modelo atenda às necessidades reais da Olist.**
 
+
+# **Etapa 2 do CRISP-DM: Estrutura dos Dados**
+
+Nesta fase, exploramos a estrutura e a qualidade do dataset consolidado da Olist, com foco em identificar padrões iniciais, valores ausentes e possíveis problemas nos dados que impactam a experiência do cliente e a logística de entrega.
+
+---
+
+## 📌 1. Estrutura do Dataset
+
+- **Fonte:** consolidação de 4 tabelas: pedidos, clientes, itens e avaliações.
+- **Total de registros:** aproximadamente 99 mil linhas.
+- **Total de colunas:** 25 variáveis.
+- **Principais variáveis:**
+  - `review_score`: nota do cliente (1 a 5)
+  - `price`: valor do item comprado
+  - `freight_value`: valor do frete
+  - `order_delivered_customer_date`, `order_estimated_delivery_date`: datas para cálculo de atraso
+  - `customer_state`, `seller_id`: localização do cliente e vendedor
+
+---
+
+## 📌 2. Valores Ausentes e Duplicados
+
+- **Campos com nulos relevantes:**
+  - `review_comment_title`: ~58% ausente
+  - `review_comment_message`: ~45% ausente
+  - `order_delivered_customer_date`: nulo em pedidos não entregues ou cancelados
+- **Campos críticos (`price`, `freight_value`)** têm pouquíssimos nulos.
+- **Duplicatas:** nenhuma duplicata de `order_id` encontrada.
+
+---
+
+## 📌 3. Inconsistências e Problemas Identificados
+
+- **Entregas inválidas:** datas de entrega anteriores à data da compra.
+- **Preços suspeitos:** registros com `price <= 0`.
+- **Fretes extremos:** valores acima do percentil 99 (R$150+).
+
+Esses casos foram apenas diagnosticados nesta etapa e serão tratados na Etapa 3.
+
+---
+
+## 📌 4. Análise Exploratória Visual
+
+### 🎯 Distribuição das Avaliações dos Clientes
+- A maior parte das avaliações são 4 ou 5 estrelas.
+- Notas 1 e 2 representam ~10% dos pedidos.
+
+### 🚚 Distribuição dos Dias de Atraso na Entrega
+- Muitos pedidos entregues adiantados (valores negativos).
+- Pico em 0 dias e outro entre 3 e 5 dias de atraso.
+
+### 💸 Preço vs Frete
+- Fretes caros aparecem mesmo para produtos de valor baixo.
+- Não há relação linear clara entre preço e frete.
+
+### ⏱️ Tempo de Entrega vs Avaliação
+- Notas baixas concentram maior tempo médio de entrega.
+- Clientes que receberam no prazo ou adiantado tendem a avaliar melhor.
+
+---
+
+## 📌 5. Correlações
+
+- **`delivery_delay` vs `review_score`:** correlação negativa (-0.23)  
+- **`freight_value` e `price`:** quase nenhuma correlação (0.02)  
+- **Correlação entre `delivery_delay` e `total_delivery_time`:** moderada
+
+---
+
+## ✅ Conclusão da Etapa 2
+
+- A estrutura dos dados está adequada, com poucos nulos críticos.
+- As análises sugerem que **atrasos têm impacto direto na avaliação do cliente**.
+- Há registros inconsistentes (entrega inválida, frete extremo, preço nulo) que serão tratados na próxima fase.
+
+**➡️ A Etapa 3 (Preparação dos Dados)** focará em criar variáveis derivadas, tratar valores problemáticos e preparar os dados para modelagem preditiva ou segmentações.
