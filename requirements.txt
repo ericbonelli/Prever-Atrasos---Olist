@@ -1,6 +1,6 @@
-streamlit==1.43.2
-pandas>=1.4.0
-scikit-learn>=1.0
+streamlit
+pandas
 joblib
+scikit-learn
 shap
 matplotlib
